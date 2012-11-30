@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright (c) 2008, 2010 Xuggle Inc.  All rights reserved.
+     
+    This file is part of Xuggle-Xuggler-Red5.
+   
+    Xuggle-Xuggler-Red5 is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+   
+    Xuggle-Xuggler-Red5 is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+   
+    You should have received a copy of the GNU Lesser General Public License
+    along with Xuggle-Xuggler-Red5.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:lang="http://www.springframework.org/schema/lang"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd
+  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+  <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>/WEB-INF/red5-web.properties</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="web.context" class="org.red5.server.Context" autowire="byType"/>
+
+  <bean id="web.scope" class="org.red5.server.WebScope" init-method="register">
+    <property name="server" ref="red5.server"/>
+    <property name="parent" ref="global.scope"/>
+    <property name="context" ref="web.context"/>
+    <property name="handler" ref="web.handler"/>
+    <property name="contextPath" value="${webapp.contextPath}"/>
+    <property name="virtualHosts" value="${webapp.virtualHosts}"/>
+  </bean>
+
+  <bean id="web.handler"
+    class="com.xuggle.red5.demo.VideoTranscoderDemoAdapter"
+    init-method="init">
+    <!-- Have the profiler spit out data every 15 seconds -->
+    <property name="profilerFrequency" value="15"/>
+  </bean>	
+
+</beans>
